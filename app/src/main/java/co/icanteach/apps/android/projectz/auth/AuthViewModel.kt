@@ -8,7 +8,6 @@ import co.icanteach.apps.android.projectz.core.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,9 +34,16 @@ class AuthViewModel @Inject constructor(
             try {
                 authUseCase.auth(email, password)
                 _authSuccessState.value = true
+                resetPageErrorState()
             } catch (ex: Exception) {
                 _pageErrorState.value = AuthPageErrorViewState(ex)
             }
+        }
+    }
+
+    fun resetPageErrorState() {
+        if (_pageErrorState.value?.exception != null) {
+            _pageErrorState.value = AuthPageErrorViewState(null)
         }
     }
 }
